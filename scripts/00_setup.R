@@ -16,3 +16,14 @@ for (pkg in required_pkgs) {
   }
   
 }
+# The raw_object.rds contains cells that already passed:
+#   - Min 200 genes expressed per cell
+#   - Max 10% mitochondrial UMIs
+#   - Doublet removal (cells expressing >1 major marker)
+#   - NormalizeData (LogNormalize) + ScaleData
+#
+# The deposited object retained raw counts but not the
+# normalized data slot. We re-run log-normalization
+# (identical parameters) and save as raw_object_normalized.rds --> rerunning in 01_eda.R
+#
+# Source: Zheng et al. Nat Cancer 4, 1138–1156 (2023)

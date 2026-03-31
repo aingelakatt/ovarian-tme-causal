@@ -1,0 +1,16 @@
+"Annotation","maintypes_2","n_cells","pct"
+"M05_Mono-CD14","Monocyte",9616,17.83
+"M14_Macro-FOLR2","Macrophage",9195,17.05
+"M09_Macro-FABP5","Macrophage",9051,16.78
+"M12_Macro-C3","Macrophage",7951,14.74
+"M11_Macro-VCAN","Macrophage",3257,6.04
+"M01_DC-CD1C","DC",3118,5.78
+"M13_Proliferative-Macro-C3","Proliferative cells",2073,3.84
+"M08_Macro-FN1","Macrophage",2027,3.76
+"M07_Macro-EREG","Macrophage",1788,3.31
+"M06_Mono-FCGR3A","Monocyte",1459,2.7
+"M10_Macro-C1QA","Macrophage",1254,2.32
+"M15_Proliferative-Macro-FOLR2","Proliferative cells",1000,1.85
+"M03_DC-LAMP3","DC",878,1.63
+"M04_DC-LGALS2","DC",862,1.6
+"M02_DC-CLEC9A","DC",413,0.77

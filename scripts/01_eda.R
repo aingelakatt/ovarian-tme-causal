@@ -1,23 +1,49 @@
 #-------Dataset Acquisition and Exploration-------
-
+Sys.setenv("R_MAX_VSIZE" = "32Gb") #adding more R
 library(Seurat) 
 library(tidyverse)
 library(pcalg)
 library(bnlearn)
 library(ggplot2)
 library(scales)
+library(pheatmap)
+# -------------------------------------------------
+# Memory-safe loading + normalization
+# -------------------------------------------------
+#Run if starting the pipeline --> don't load the other libraries in only load Seurat --> the dataset that will be created is 15.7GB, need to save as much RAM as possible 
+#library(Seurat)
 
-#Load Dataset 
-tme_data <- readRDS("~/Downloads/oc_tme_causal/raw_object.rds")
 
-#Metadata 
-print(head(tme_data@meta.data))
+#if (!file.exists("~/Downloads/oc_tme_causal/raw_object_normalized.rds")){
+#  tme_data <- readRDS("~/Downloads/oc_tme_causal/raw_object.rds")
+#  tme_data <- UpdateSeuratObject(tme_data)
+#  gc()
+  
+  # Normalize in-place on sparse matrix — no extra memory
+#  counts_mat <- tme_data@assays$RNA@counts
+#  col_sums <- Matrix::colSums(counts_mat)
+#  col_idx <- rep(seq_along(diff(counts_mat@p)), diff(counts_mat@p))
+#  counts_mat@x <- log1p(counts_mat@x * (10000 / col_sums[col_idx]))
+#  tme_data@assays$RNA@data <- counts_mat
+#  rm(counts_mat, col_sums, col_idx); gc()
+#  saveRDS(tme_data, "~/Downloads/oc_tme_causal/raw_object_normalized.rds")
+#  cat("Done.\n")
+#}else {
+#  tme_data <- readRDS("~/Downloads/oc_tme_causal/raw_object_normalized.rds") #this is 15.4 GB don't run this lol 
+#}
+#tme_data@assays$RNA@counts <- new("dgCMatrix")
+#gc()
+#saveRDS(tme_data, "~/Downloads/oc_tme_causal/raw_object_normalized_lite.rds")
 
-#UMAP plot
-library(ggplot2)
+# -----------------------------------------------
+# Metadata extraction
+# -------------------------------------------------
 
-# 1. Pull the metadata into a standard data frame
 plot_df <- tme_data@meta.data
+
+cat("Ready:", nrow(plot_df), "cells\n")
+
+print(head(plot_df))
 
 #----------GLOBAL UMAP PLOTS --------------------
 
@@ -101,33 +127,6 @@ print(levels(plot_df$maintypes_2))
 cat("\n=== Patients levels ===\n")
 print(levels(plot_df$Patients))
 
-
-# ----- Normalize data (needed for DotPlot / FeaturePlot later) -----
-# The data slot is empty — we need to run NormalizeData
-cat("\nUpdating Seurat object from v3 to v5 format...\n")
-tme_data <- UpdateSeuratObject(tme_data)
-# Force normalize using the counts matrix directly
-cat("Normalizing (memory-efficient)...\n")
-
-# Get column sums without transposing
-col_sums <- Matrix::colSums(counts_mat)
-
-# Create a diagonal scaling matrix (1/colSum * 10000) and multiply
-# This is sparse × diagonal — very memory efficient
-scale_factors <- 10000 / col_sums
-norm_mat <- counts_mat %*% Matrix::Diagonal(x = scale_factors)
-
-# Log transform in-place (sparse matrix stays sparse for zeros)
-norm_mat@x <- log1p(norm_mat@x)
-
-# Copy dimnames from original
-dimnames(norm_mat) <- dimnames(counts_mat)
-
-cat("Normalized matrix:", nrow(norm_mat), "x", ncol(norm_mat), "\n")
-
-# Write into the assay
-tme_data@assays$RNA@data <- norm_mat
-cat("Done.\n")
 
 
 # Table 1: Dataset overview
@@ -290,6 +289,171 @@ fig10 <- plot_df %>%
        title = "Total cells per sample")
 fig10
 ggsave("figures/fig10_cells_per_sample.png", fig10, width = 14, height = 6, dpi = 300)
+
+#--------------------- T cell exploration-------------------------------------------
+
+
+# The 14 maintypes_2 levels include "CD4+ T", "CD8+ T",
+# Filter from metadata
+t_df <- plot_df %>%
+  filter(maintypes_2 %in% c("CD4+ T", "CD8+ T"))
+cat("CD4/CD8:", nrow(t_df), "\n")
+
+# Table 12: T cell subtypes
+tab12 <- t_df %>%
+  count(Annotation, maintypes_2, name = "n_cells") %>%
+  mutate(pct = round(100 * n_cells / sum(n_cells), 2)) %>%
+  arrange(desc(n_cells))
+write.csv(tab12, "tables/tab12_tcell_subtypes.csv", row.names = FALSE)
+cat("\nT cell subtypes:\n")
+print(tab12)
+
+
+# --- Seurat subset for gene expression plots ---
+
+t_cells_seurat <- subset(tme_data, cells = rownames(t_df))
+
+# Add UMAP reduction to subset
+umap_t <- as.matrix(t_df[, c("UMAP_1", "UMAP_2")])
+rownames(umap_t) <- rownames(t_df)
+t_cells_seurat[["umap"]] <- CreateDimReducObject(
+  embeddings = umap_t, key = "UMAP_", assay = DefaultAssay(t_cells_seurat))
+
+# Fig 11: T cell markers DotPlot — from Zheng et al. paper
+t_markers <- c("CD4", "CD8A", "SELL", "CCR7", "ANXA1",
+               "FOXP3", "IL2RA", "CTLA4", "CXCL13", "ANXA2",
+               "GZMK", "CCL4", "CX3CR1", "GNLY", "FGFBP2",
+               "GZMB", "TNFRSF9", "HAVCR2", "SLC4A10", "TRDV2")
+t_markers_ok <- t_markers[t_markers %in% rownames(t_cells_seurat)]
+cat("T markers found:", length(t_markers_ok), "/", length(t_markers), "\n")
+cat("Missing:", paste(t_markers[!t_markers %in% rownames(t_cells_seurat)], collapse = ", "), "\n")
+
+fig11 <- DotPlot(t_cells_seurat, features = t_markers_ok, group.by = "Annotation") +
+  coord_flip() +
+  theme_minimal(base_size = 9) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  ggtitle("T cell markers across subtypes (Zheng et al.)")
+fig11
+ggsave("figures/fig11_tcell_markers_dotplot.png", fig11, width = 14, height = 9, dpi = 300)
+
+
+# --- Fig 12: Heatmap of T cell marker genes × clusters ---
+
+# Define marker genes per cluster (from Zheng et al.)
+# Organized by functional group
+t_heatmap_genes <- c(
+  # CD4 naive/memory
+  "CCR7", "SELL", "LEF1",
+  # CD4 effector memory
+  "ANXA1", "S100A4", "IL7R",
+  # Treg
+  "FOXP3", "IL2RA", "CTLA4", "IKZF2",
+  # CD4 cytotoxic
+  "CX3CR1", "FGFBP2", "GNLY",
+  # CD4 exhausted
+  "PDCD1", "CXCL13", "TOX",
+  # CD8 naive
+  "TCF7", "CD8A", "CD8B",
+  # CD8 effector memory
+  "ANXA2", "GZMK", "CCL4", "CCL5",
+  # CD8 cytotoxic
+  "GZMB", "PRF1", "NKG7", "GNLY",
+  # CD8 exhausted
+  "HAVCR2", "LAG3", "TIGIT", "TNFRSF9",
+  # MAIT
+  "SLC4A10", "KLRB1", "ZBTB16",
+  # gamma-delta
+  "TRDV2", "TRDC"
+)
+
+# Remove duplicates and check availability
+t_heatmap_genes <- unique(t_heatmap_genes)
+genes_ok <- t_heatmap_genes[t_heatmap_genes %in% rownames(t_cells_seurat)]
+cat("Heatmap genes found:", length(genes_ok), "/", length(t_heatmap_genes), "\n")
+if (length(genes_ok) < length(t_heatmap_genes)) {
+  cat("Missing:", paste(setdiff(t_heatmap_genes, genes_ok), collapse = ", "), "\n")
+}
+
+# Compute mean expression per cluster
+# Pull normalized expression for these genes
+expr_mat <- GetAssayData(t_cells_seurat, layer = "data")[genes_ok, ]
+cluster_ids <- t_cells_seurat@meta.data$Annotation
+
+# Average expression per cluster
+clusters <- sort(unique(cluster_ids))
+avg_expr <- matrix(0, nrow = length(genes_ok), ncol = length(clusters))
+rownames(avg_expr) <- genes_ok
+colnames(avg_expr) <- clusters
+
+for (cl in clusters) {
+  cells_in <- which(cluster_ids == cl)
+  if (length(cells_in) > 0) {
+    avg_expr[, cl] <- Matrix::rowMeans(expr_mat[, cells_in, drop = FALSE])
+  }
+}
+
+# Scale rows (z-score per gene) for better visualization
+avg_scaled <- t(scale(t(avg_expr)))
+
+
+png("figures/fig12_tcell_marker_heatmap.png",
+    width = 10, height = 12, units = "in", res = 300)
+pheatmap(avg_scaled,
+         cluster_rows = FALSE,
+         cluster_cols = FALSE,
+         color = colorRampPalette(c("#2166AC", "white", "#B2182B"))(100),
+         fontsize_row = 10,
+         fontsize_col = 10,
+         angle_col = 45,
+         main = "T cell marker genes across clusters (row-scaled)",
+         gaps_col = NULL,
+         border_color = NA)
+dev.off()
+cat("Saved: fig12_tcell_marker_heatmap.png\n")
+
+# Also display in RStudio
+pheatmap(avg_scaled,
+         cluster_rows = FALSE,
+         cluster_cols = FALSE,
+         color = colorRampPalette(c("#2166AC", "white", "#B2182B"))(100),
+         fontsize_row = 10,
+         fontsize_col = 10,
+         angle_col = 45,
+         main = "T cell marker genes across clusters (row-scaled)",
+         border_color = NA)
+
+
+# Fig 13: Feature plots — cytotoxic vs exhaustion
+feat_genes <- c("GZMB", "PRF1", "NKG7", "PDCD1", "HAVCR2", "TIGIT")
+feat_ok <- feat_genes[feat_genes %in% rownames(t_cells_seurat)]
+
+fig13 <- FeaturePlot(t_cells_seurat, features = feat_ok,
+                     reduction = "umap", ncol = 3, order = TRUE) &
+  theme_minimal(base_size = 9)
+print(fig13)
+ggsave("figures/fig13_tcell_cyto_exh_features.png", fig13, width = 14, height = 9, dpi = 300)
+
+
+#------------Myeloid Cells-----------------
+
+# Subset myeloid cells using M01-M15 annotation prefix
+mac_df <- plot_df %>%
+  filter(grepl("^M\\d", Annotation))
+cat("Myeloid cells (M01-M15):", nrow(mac_df), "\n")
+
+# Table 13: Myeloid cell subtypes
+tab13 <- mac_df %>%
+  count(Annotation, maintypes_2, name = "n_cells") %>%
+  mutate(pct = round(100 * n_cells / sum(n_cells), 2)) %>%
+  arrange(desc(n_cells))
+write.csv(tab13, "tables/tab13_mac_cell_subtypes.csv", row.names = FALSE)
+cat("\n Macrophage cell subtypes:\n")
+print(tab13)
+
+
+
+
+
 
 
 
