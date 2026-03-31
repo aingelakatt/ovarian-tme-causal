@@ -1,0 +1,88 @@
+"Annotation","maintypes_2","maintypes_3","n_cells","pct"
+"T02_CD4-ANXA1","CD4+ T","Lymphoid cells",24980,11.18
+"T01_CD4-CCR7","CD4+ T","Lymphoid cells",12987,5.81
+"T08_CD8-GZMK","CD8+ T","Lymphoid cells",11032,4.94
+"M05_Mono-CD14","Monocyte","Myeloid cells",9616,4.31
+"M14_Macro-FOLR2","Macrophage","Myeloid cells",9195,4.12
+"M09_Macro-FABP5","Macrophage","Myeloid cells",9051,4.05
+"M12_Macro-C3","Macrophage","Myeloid cells",7951,3.56
+"T03_CD4-FOXP3","CD4+ T","Lymphoid cells",7370,3.3
+"B01_NaiveB-CD72","B","Lymphoid cells",7288,3.26
+"B02_FollicularB-MS4A1","B","Lymphoid cells",7011,3.14
+"N02_NK-FCGR3A","NK","Lymphoid cells",6212,2.78
+"T09_CD8-CX3CR1","CD8+ T","Lymphoid cells",5629,2.52
+"EP01","Epithelial cells","Cancer cells",4693,2.1
+"EP02","Epithelial cells","Cancer cells",4326,1.94
+"T10_CD8-HAVCR2","CD8+ T","Lymphoid cells",4275,1.91
+"EP10","Epithelial cells","Cancer cells",4051,1.81
+"N01_NK-XCL1","NK","Lymphoid cells",3913,1.75
+"B03_PlasmaB-SDC1","B","Lymphoid cells",3758,1.68
+"EP16","Epithelial cells","Cancer cells",3644,1.63
+"T06_CD8-CCR7","CD8+ T","Lymphoid cells",3425,1.53
+"T07_CD8-ANXA2","CD8+ T","Lymphoid cells",3277,1.47
+"M11_Macro-VCAN","Macrophage","Myeloid cells",3257,1.46
+"EP18","Epithelial cells","Cancer cells",3190,1.43
+"M01_DC-CD1C","DC","Myeloid cells",3118,1.4
+"EP19","Epithelial cells","Cancer cells",2904,1.3
+"EP20","Epithelial cells","Cancer cells",2518,1.13
+"EP21","Epithelial cells","Cancer cells",2245,1.01
+"Proliferative cells","Proliferative cells","Proliferative cells",2230,1
+"EP22","Epithelial cells","Cancer cells",2208,0.99
+"S06_CAF-TNXB","Fibroblast","Stromal cells",2079,0.93
+"M13_Proliferative-Macro-C3","Proliferative cells","Proliferative cells",2073,0.93
+"M08_Macro-FN1","Macrophage","Myeloid cells",2027,0.91
+"T11_CD8-SLC4A10","CD8+ T","Lymphoid cells",1935,0.87
+"S02_CAF-COL15A1","Fibroblast","Stromal cells",1919,0.86
+"EP03","Epithelial cells","Cancer cells",1794,0.8
+"M07_Macro-EREG","Macrophage","Myeloid cells",1788,0.8
+"EP04","Epithelial cells","Cancer cells",1750,0.78
+"S05_CAF-MME","Fibroblast","Stromal cells",1698,0.76
+"EP05","Epithelial cells","Cancer cells",1676,0.75
+"EP06","Epithelial cells","Cancer cells",1609,0.72
+"EP07","Epithelial cells","Cancer cells",1543,0.69
+"EP08","Epithelial cells","Cancer cells",1472,0.66
+"M06_Mono-FCGR3A","Monocyte","Myeloid cells",1459,0.65
+"T04_CD4-CX3CR1","CD4+ T","Lymphoid cells",1402,0.63
+"EP09","Epithelial cells","Cancer cells",1397,0.63
+"S03_CAF-CXCL10","Fibroblast","Stromal cells",1270,0.57
+"M10_Macro-C1QA","Macrophage","Myeloid cells",1254,0.56
+"EP11","Epithelial cells","Cancer cells",1046,0.47
+"M15_Proliferative-Macro-FOLR2","Proliferative cells","Proliferative cells",1000,0.45
+"EP12","Epithelial cells","Cancer cells",953,0.43
+"S15_Pericyte-IL6","Other stromal cells","Stromal cells",933,0.42
+"S01_CAF-C3","Fibroblast","Stromal cells",895,0.4
+"M03_DC-LAMP3","DC","Myeloid cells",878,0.39
+"M04_DC-LGALS2","DC","Myeloid cells",862,0.39
+"S11_MC-DES","Mesothelial cells","Stromal cells",738,0.33
+"T05_CD4-PDCD1","CD4+ T","Lymphoid cells",701,0.31
+"S20_SMC-ELN","Other stromal cells","Stromal cells",691,0.31
+"E03_ENDO-IL13RA1","Endothelial cells","Endothelial cells",606,0.27
+"EP13","Epithelial cells","Cancer cells",548,0.25
+"S14_Pericyte-CCL21","Other stromal cells","Stromal cells",510,0.23
+"EP14","Epithelial cells","Cancer cells",495,0.22
+"EP15","Epithelial cells","Cancer cells",490,0.22
+"E08_ENDO-THBD","Endothelial cells","Endothelial cells",465,0.21
+"S07_CAF-TWIST1","Fibroblast","Stromal cells",444,0.2
+"M02_DC-CLEC9A","DC","Myeloid cells",413,0.18
+"S18_Pericyte-TRPC6","Other stromal cells","Stromal cells",395,0.18
+"S10_MC-CXCL10","Mesothelial cells","Stromal cells",384,0.17
+"E10_ENDO-WT1","Endothelial cells","Endothelial cells",367,0.16
+"E09_ENDO-VCAM1","Endothelial cells","Endothelial cells",355,0.16
+"S17_Pericyte-THBS4","Other stromal cells","Stromal cells",346,0.15
+"E02_ENDO-EGFL7","Endothelial cells","Endothelial cells",330,0.15
+"S13_MC-VCAN","Mesothelial cells","Stromal cells",320,0.14
+"E07_ENDO-SERPINE2","Endothelial cells","Endothelial cells",315,0.14
+"S04_CAF-MKI67","Proliferative cells","Proliferative cells",291,0.13
+"EP17","Epithelial cells","Cancer cells",253,0.11
+"E01_ENDO-CCL14","Endothelial cells","Endothelial cells",246,0.11
+"E12_Lymphatic-PLAT","Endothelial cells","Endothelial cells",242,0.11
+"S08_CAF-VEGFA","Fibroblast","Stromal cells",229,0.1
+"S19_SMC-IL6","Other stromal cells","Stromal cells",193,0.09
+"S09_Fibrocyte-CD34","Other stromal cells","Stromal cells",176,0.08
+"E04_ENDO-KDR","Endothelial cells","Endothelial cells",166,0.07
+"S16_Pericyte-MKI67","Proliferative cells","Proliferative cells",134,0.06
+"E05_ENDO-KIT","Endothelial cells","Endothelial cells",122,0.05
+"HSC","HSC","HSC",112,0.05
+"S12_MC-MKI67","Proliferative cells","Proliferative cells",88,0.04
+"E06_ENDO-MKI67","Proliferative cells","Proliferative cells",78,0.03
+"E11_Lymphatic-PDPN","Endothelial cells","Endothelial cells",54,0.02

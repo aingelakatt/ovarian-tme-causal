@@ -1,0 +1,15 @@
+"maintypes_2","Primary Tumor","Metastatic Tumor","Lymph Node","Ascites","PBMC"
+"B",570,1410,11239,1423,3415
+"CD4+ T",3055,1804,21805,7974,12802
+"CD8+ T",4904,5645,4540,9371,5113
+"NK",1253,878,951,4530,2513
+"Monocyte",15,1,16,218,10825
+"Macrophage",6923,4347,95,23121,37
+"DC",348,467,768,3297,391
+"Fibroblast",5365,3149,6,14,0
+"Mesothelial cells",438,256,0,748,0
+"Other stromal cells",2015,817,412,0,0
+"Endothelial cells",1391,1291,586,0,0
+"Epithelial cells",32596,10695,60,1444,10
+"HSC",3,1,18,45,45
+"Proliferative cells",2426,1326,478,1314,350

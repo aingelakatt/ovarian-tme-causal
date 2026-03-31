@@ -1,0 +1,40 @@
+"Samples","Patients","Groups","n_cells","pct"
+"HGSOC1_PT","HGSOC1","Primary Tumor",5820,2.61
+"HGSOC1_MT","HGSOC1","Metastatic Tumor",7943,3.56
+"HGSOC1_AS","HGSOC1","Ascites",6080,2.72
+"HGSOC1_BC","HGSOC1","PBMC",8253,3.69
+"HGSOC2_PT","HGSOC2","Primary Tumor",8919,3.99
+"HGSOC2_LN","HGSOC2","Lymph Node",11718,5.25
+"HGSOC2_AS","HGSOC2","Ascites",9204,4.12
+"HGSOC2_BC","HGSOC2","PBMC",7972,3.57
+"HGSOC3_PT","HGSOC3","Primary Tumor",5592,2.5
+"HGSOC3_MT","HGSOC3","Metastatic Tumor",5215,2.33
+"HGSOC3_LN","HGSOC3","Lymph Node",6611,2.96
+"HGSOC3_AS","HGSOC3","Ascites",4951,2.22
+"HGSOC3_BC","HGSOC3","PBMC",5689,2.55
+"HGSOC4_PT","HGSOC4","Primary Tumor",5304,2.37
+"HGSOC4_MT","HGSOC4","Metastatic Tumor",2905,1.3
+"HGSOC4_LN","HGSOC4","Lymph Node",4245,1.9
+"HGSOC4_BC","HGSOC4","PBMC",2892,1.29
+"HGSOC5_PT","HGSOC5","Primary Tumor",3396,1.52
+"HGSOC5_AS","HGSOC5","Ascites",3547,1.59
+"HGSOC6_PT","HGSOC6","Primary Tumor",3493,1.56
+"HGSOC6_MT","HGSOC6","Metastatic Tumor",5498,2.46
+"HGSOC6_LN","HGSOC6","Lymph Node",3875,1.73
+"HGSOC6_AS","HGSOC6","Ascites",3796,1.7
+"HGSOC6_BC","HGSOC6","PBMC",3514,1.57
+"HGSOC7_PT","HGSOC7","Primary Tumor",2968,1.33
+"HGSOC8_PT","HGSOC8","Primary Tumor",3048,1.36
+"HGSOC8_AS","HGSOC8","Ascites",3583,1.6
+"HGSOC9_PT","HGSOC9","Primary Tumor",3100,1.39
+"HGSOC9_AS","HGSOC9","Ascites",4695,2.1
+"HGSOC10_PT","HGSOC10","Primary Tumor",3506,1.57
+"HGSOC10_AS","HGSOC10","Ascites",2350,1.05
+"ECO1_PT","ECO1","Primary Tumor",8799,3.94
+"ECO1_MT","ECO1","Metastatic Tumor",10526,4.71
+"ECO1_LN","ECO1","Lymph Node",14525,6.5
+"ECO1_AS","ECO1","Ascites",11550,5.17
+"ECO1_BC","ECO1","PBMC",7181,3.21
+"UOC1_PT","UOC1","Primary Tumor",3622,1.62
+"OCCC1_AS","OCCC1","Ascites",3743,1.68
+"C1_PT","C1","Primary Tumor",3735,1.67
