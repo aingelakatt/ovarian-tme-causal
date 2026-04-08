@@ -16,6 +16,7 @@
 
 library(tidyverse)
 library(scales)
+library(ggplot)
 
 # --- Configuration ------------------------------------------------------------
 DATA_DIR <- "~/Downloads/oc_tme_causal"
@@ -552,6 +553,29 @@ write.csv(tissue_comparison, "tables/tab_features_by_tissue.csv", row.names = FA
 cat("Saved: tables/tab_features_by_tissue.csv\n")
 
 # ==============================================================================
+
+# ==============================================================================
+cat("Investigating Tcell_myeloid ratio and Mstate_DC because they correlate = 0.83")
+
+
+
+
+tcell_myeloid_box <- ggplot(feature_matrix_selected, aes(x = Groups, y = Tcell_Myeloid_ratio)) +
+  geom_boxplot() +
+  geom_jitter(width = 0.15, alpha = 0.6) +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+ggsave("figures/fig14_tcell_myeloid_ratio_box.png", tcell_myeloid_box, width = 14, height = 9, dpi = 300)
+
+tcell_myeloid_box
+mstate_dc_box <- ggplot(feature_matrix_selected, aes(x = Groups, y = Mstate_simple_dendritic_cell)) +
+  geom_boxplot() +
+  geom_jitter(width = 0.15, alpha = 0.6) +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+mstate_dc_box
+ggsave("figures/fig15_Mstate_simple_dendritic_cell.png", mstate_dc_box, width=14, height =9, dpi=300)
+# ==============================================================================
 # NEXT STEPS
 # ==============================================================================
 cat("\n")
@@ -567,3 +591,5 @@ cat("  - tables/tab_features_by_tissue.csv     (tissue comparison)\n")
 cat("  - figures/fig_feature_correlations.png\n")
 cat("\nNext step: Run 03_causal_dag.R on CRC\n")
 cat("\n")
+
+
