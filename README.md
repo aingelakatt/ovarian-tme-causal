@@ -5,6 +5,9 @@ Base Paper: Zheng, X., Wang, X., Cheng, X., Liu, Z., Yin, Y., Li, X., Huang, Z.,
 
 Note: raw_object.rds is a Seurat v3 object, current Seurat is v5 --> so workarounds needed 
 
+T cell functional states --> paper: 
+https://www.nature.com/articles/s41392-023-01471-y#Sec2 
+
 Carlie - lit review
 
 Running list of immune cells playing a role in the ovarian cancer tumor microenvironment:
