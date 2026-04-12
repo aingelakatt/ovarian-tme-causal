@@ -1,0 +1,7 @@
+"step","seconds","notes"
+"PC",0.0358738899230957,""
+"FCI",0.0189969539642334,""
+"HC",0.00626301765441895,""
+"TABU",0.00608110427856445,""
+"Bootstrap_total",1.83240294456482,"50 iterations"
+"Bootstrap_per_iter",0.0366480588912964,"extrapolate to 1000"
