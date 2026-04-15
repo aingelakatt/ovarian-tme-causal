@@ -38,5 +38,8 @@ TAMs, TILs, CD8+ CTLs, CD4+ T cells, Tregs, DCs, NK cells, MDSCs
 Yang, L., Wang, S., Zhang, Q., Pan, Y., Lv, Y., Chen, X., Zuo, Y., & Hao, D. (2018). Clinical significance of the immune microenvironment in ovarian cancer patients. Molecular Omics, 14(5), 341-351. https://doi.org/10.1039/C8MO00128F
 CD4+ T cells, CD8+ T cells, B cells, DCs, Tregs, NK cells, γδ T cells, MDSCs, macrophages, neutrophils, eosinophils, Type 1 T helper cells (Th1 cells), Type 2 T helper cells (Th2 cells)
 
+Ovarian cancer TME:
+Garlisi B, Lauks S, Aitken C, Ogilvie LM, Lockington C, Petrik D, Eichhorn JS, Petrik J. The Complex Tumor Microenvironment in Ovarian Cancer: Therapeutic Challenges and Opportunities. Curr Oncol. 2024 Jul 1;31(7):3826-3844. doi: 10.3390/curroncol31070283. PMID: 39057155; PMCID: PMC11275383.
+
 Google slides for final presentation:
 https://docs.google.com/presentation/d/1poxDT6SmeRXndT9WBN9-MrW0yK0FqtDjRVgg2BMmEBQ/edit?slide=id.g3d5f41f8b82_0_1293#slide=id.g3d5f41f8b82_0_1293
