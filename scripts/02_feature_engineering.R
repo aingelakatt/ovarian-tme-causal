@@ -532,6 +532,56 @@ if (ncol(causal_numeric) > 2) {
   cat("Saved: figures/fig_feature_correlations.png\n")
 }
 
+# --- Focused Correlation: Modules ---
+target_vars1 <- c("prop_Fibroblast", "prop_Endothelial_cells", "CD8_CD4_ratio")
+target_vars2 <- c("prop_Epithelial_cells", "Mstate_simple_TAM_immunosuppressive", "Tstate_simple_exhausted", "Tstate_simple_regulatory")
+target_vars3 <- c("prop_B", "Tcell_Myeloid_ratio", "Mstate_simple_dendritic_cell", "prop_CD4_T", "Immune_Tumor_ratio")
+target_vars4 <- c("prop_CD8_T", "prop_NK", "Tstate_simple_cytotoxic")
+
+vars1 <- target_vars1[target_vars1 %in% rownames(cor_mat)]
+png("figures/fig_feature_correlations_module1.png", width = 10, height = 10, units = "in", res = 300)
+pheatmap(cor_mat[vars1, vars1],
+         color = colorRampPalette(c("#2166AC", "white", "#B2182B"))(100),
+         breaks = seq(-1, 1, length.out = 101),
+         display_numbers = TRUE,
+         number_format = "%.2f",
+         fontsize_number = 7,
+         main = "Feature Correlations (Module 1)")
+dev.off()
+cat("Saved: figures/fig_feature_correlations_module1.png\n")
+vars2 <- target_vars2[target_vars2 %in% rownames(cor_mat)]
+png("figures/fig_feature_correlations_module2.png", width = 10, height = 10, units = "in", res = 300)
+pheatmap(cor_mat[vars2, vars2],
+         color = colorRampPalette(c("#2166AC", "white", "#B2182B"))(100),
+         breaks = seq(-1, 1, length.out = 101),
+         display_numbers = TRUE,
+         number_format = "%.2f",
+         fontsize_number = 7,
+         main = "Feature Correlations (Module 2)")
+dev.off()
+cat("Saved: figures/fig_feature_correlations_module2.png\n")
+vars3 <- target_vars3[target_vars3 %in% rownames(cor_mat)]
+png("figures/fig_feature_correlations_module3.png", width = 10, height = 10, units = "in", res = 300)
+pheatmap(cor_mat[vars3, vars3],
+         color = colorRampPalette(c("#2166AC", "white", "#B2182B"))(100),
+         breaks = seq(-1, 1, length.out = 101),
+         display_numbers = TRUE,
+         number_format = "%.2f",
+         fontsize_number = 7,
+         main = "Feature Correlations (Module 3)")
+dev.off()
+cat("Saved: figures/fig_feature_correlations_module3.png\n")
+vars4 <- target_vars4[target_vars4 %in% rownames(cor_mat)]
+png("figures/fig_feature_correlations_module4.png", width = 10, height = 10, units = "in", res = 300)
+pheatmap(cor_mat[vars4, vars4],
+         color = colorRampPalette(c("#2166AC", "white", "#B2182B"))(100),
+         breaks = seq(-1, 1, length.out = 101),
+         display_numbers = TRUE,
+         number_format = "%.2f",
+         fontsize_number = 7,
+         main = "Feature Correlations (Module 4)")
+dev.off()
+cat("Saved: figures/fig_feature_correlations_module4.png\n")
 # ==============================================================================
 # TISSUE-STRATIFIED ANALYSIS (for Groups comparison)
 # ==============================================================================
