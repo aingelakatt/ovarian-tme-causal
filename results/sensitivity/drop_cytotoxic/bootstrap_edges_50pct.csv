@@ -1,0 +1,11 @@
+"from","to","strength","direction"
+"prop_Epithelial_cells","Mstate_simple_TAM_immunosuppressive",0.962,0.490599197974672
+"Mstate_simple_TAM_immunosuppressive","prop_Epithelial_cells",0.962,0.509400802025328
+"prop_Fibroblast","Mstate_simple_TAM_immunosuppressive",0.947,0.327339329239833
+"Mstate_simple_TAM_immunosuppressive","prop_Fibroblast",0.947,0.672660670760167
+"Mstate_simple_TAM_immunosuppressive","Mstate_simple_dendritic_cell",0.943,0.830253940506803
+"Mstate_simple_dendritic_cell","Mstate_simple_TAM_immunosuppressive",0.943,0.169746059493197
+"Mstate_simple_TAM_immunosuppressive","Tstate_simple_exhausted",0.857,0.708657441954271
+"Tstate_simple_exhausted","Mstate_simple_TAM_immunosuppressive",0.857,0.291342558045729
+"prop_Epithelial_cells","Tstate_simple_regulatory",0.828,0.71260788583071
+"Tstate_simple_regulatory","prop_Epithelial_cells",0.828,0.28739211416929

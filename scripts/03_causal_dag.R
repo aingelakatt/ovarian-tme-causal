@@ -8,8 +8,8 @@
 #
 # Input:  feature_matrix_selected.csv from 02_feature_engineering.R
 # Output: DAG structures at multiple stringency levels, visualizations
-#
-# Runs on: CRC or local
+# Running on select few groups for analysis 
+# Runs on: local
 # ==============================================================================
 # --- Load Required Libraries --------------------------------------------------
 library(tidyverse)
@@ -39,8 +39,9 @@ if (Sys.getenv("SLURM_JOB_ID") != "") {
 }
 
 # File paths
-INPUT_FILE <- file.path(PROJECT_DIR, "results/feature_matrix_selected.csv")
-OUT_DIR <- file.path(PROJECT_DIR, "results/causal")
+INPUT_FILE <- file.path(PROJECT_DIR, "results/feature_matrix_causal.csv")
+RUN_LABEL <- "drop_cytotoxic"
+OUT_DIR <- file.path(PROJECT_DIR, "results", "sensitivity", RUN_LABEL)
 FIG_DIR <- file.path(OUT_DIR, "figures")
 
 dir.create(OUT_DIR, showWarnings = FALSE, recursive = TRUE)
@@ -57,7 +58,7 @@ set.seed(SEED)
 
 # --- Logging ------------------------------------------------------------------
 cat(strrep("=", 70), "\n")
-cat("03_causal_dag.R — Causal Graph Construction\n")
+cat("03_causal_dag.R — Causal Graph Construction -- Sensitivity analysis\n")
 cat(strrep("=", 70), "\n")
 cat("Environment:", ifelse(IS_CRC, "CRC (Slurm)", "Local"), "\n")
 cat("Input:", INPUT_FILE, "\n")
@@ -82,16 +83,38 @@ if (!file.exists(INPUT_FILE)) {
 feature_df <- read.csv(INPUT_FILE)
 cat("Loaded:", nrow(feature_df), "samples x", ncol(feature_df), "columns\n")
 
-# Separate metadata from numeric features
-meta_cols <- c("Samples", "Patients", "Groups")
+# Keep Groups as an upstream context node
+feature_df$Groups <- factor(
+  feature_df$Groups,
+  levels = c("Primary Tumor", "Metastatic Tumor", "Lymph Node", "Ascites", "PBMC")
+)
+
+# Revised biologically layered, lower-redundancy variable set
+selected_vars <- c(
+  "prop_Epithelial_cells",
+  "prop_Fibroblast",
+  "Mstate_simple_TAM_immunosuppressive", #LOO sensitivity 1
+  "Mstate_simple_dendritic_cell",
+  "Tstate_simple_regulatory",
+  "Tstate_simple_exhausted",
+  # LOO: sensitivity 2: "Tstate_simple_cytotoxic",
+  "prop_NK"
+)
+
+missing_vars <- setdiff(selected_vars, names(feature_df))
+if (length(missing_vars) > 0) {
+  stop("Missing required variables: ", paste(missing_vars, collapse = ", "))
+}
+
+feature_df <- feature_df[, c("Samples", "Patients", selected_vars)]
+
+cat("Using revised variable set:\n")
+for (v in selected_vars) cat("  -", v, "\n")
+
+
+meta_cols <- c("Samples", "Patients")
 numeric_cols <- setdiff(names(feature_df), meta_cols)
-numeric_cols <- numeric_cols[sapply(feature_df[numeric_cols], is.numeric)]
 
-cat("Numeric features:", length(numeric_cols), "\n")
-cat("Variables:\n")
-for (v in numeric_cols) cat("  -", v, "\n")
-
-# Convert to matrix
 causal_mat <- as.matrix(feature_df[, numeric_cols])
 rownames(causal_mat) <- feature_df$Samples
 
@@ -116,15 +139,14 @@ if (any(is.na(causal_mat))) {
   }
 }
 
-# Standardize
+# Standardize continuous variables
 causal_mat_scaled <- scale(causal_mat)
 
-# Final dimensions
 n <- nrow(causal_mat_scaled)
 p <- ncol(causal_mat_scaled)
 
 cat("\nFinal data matrix:", n, "samples x", p, "variables\n")
-cat("n/p ratio:", round(n / p, 2), "(recommend > 5 for stable estimation)\n")
+cat("n/p ratio:", round(n / p, 2), "(recommend > 5 for stability)\n\n")
 
 if (n / p < 3) {
   cat("\n*** WARNING: n/p < 3 — results will be highly unstable! ***\n")
@@ -141,6 +163,15 @@ suffStat <- list(
 
 # Prepare data frame for bnlearn
 bn_data <- as.data.frame(causal_mat_scaled)
+# ------------------------------------------------------------------------------
+# Biological constraints
+# ------------------------------------------------------------------------------
+
+# Groups_num is upstream context and should not have incoming edges
+blacklist <- NULL
+
+# Optional biologically motivated whitelist
+whitelist <- NULL
 
 # Helper to extract PC edges
 extract_pc_edges <- function(pc_obj, method_label) {
@@ -234,7 +265,7 @@ cat(strrep("-", 50), "\n")
 cat("Hill-Climbing (score-based)\n")
 cat(strrep("-", 50), "\n")
 
-hc_lenient <- hc(bn_data, score = "bic-g")
+hc_lenient <- hc(bn_data, score = "bic-g", blacklist = blacklist, whitelist = whitelist)
 
 cat("  Edges:", narcs(hc_lenient), "\n")
 
@@ -245,7 +276,7 @@ cat(strrep("-", 50), "\n")
 cat("TABU Search (score-based, more thorough)\n")
 cat(strrep("-", 50), "\n")
 
-tabu_lenient <- tabu(bn_data, score = "bic-g")
+tabu_lenient <- tabu(bn_data, score = "bic-g", blacklist = blacklist, whitelist = whitelist)
 
 cat("  Edges:", narcs(tabu_lenient), "\n")
 
@@ -426,7 +457,7 @@ boot_strength <- boot.strength(
   bn_data,
   R = N_BOOTSTRAP,
   algorithm = "hc",
-  algorithm.args = list(score = "bic-g"),
+  algorithm.args = list(score = "bic-g", blacklist = blacklist, whitelist = whitelist),
   cpdag = FALSE,
   cluster = cl
 )
