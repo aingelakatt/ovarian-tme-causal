@@ -1,15 +1,14 @@
 # ==============================================================================
-# 03_causal_dag.R
-# Ovarian TME Causal Inference Pipeline — Phase 3
+# 05_sensitivity_analysis.R
+# Ovarian TME Causal Inference Pipeline — Phase 5
 #
 # Purpose: Construct causal DAGs from feature matrix
-#   - Preliminary graphs (lenient, exploratory)
-#   - Final graphs (stringent, bootstrap-validated)
-#
+#   -Take out hubs and rerun script to create new DAGs and see changes 
+#   -Hubs: Mstate_simple_TAM_immunosuppressive, Tstate_simple_cytotoxic
 # Input:  feature_matrix_selected.csv from 02_feature_engineering.R
 # Output: DAG structures at multiple stringency levels, visualizations
-# Running on select few groups for analysis 
-# Runs on: local
+#
+# Runs on: CRC or local
 # ==============================================================================
 # --- Load Required Libraries --------------------------------------------------
 library(tidyverse)
@@ -39,9 +38,12 @@ if (Sys.getenv("SLURM_JOB_ID") != "") {
 }
 
 # File paths
+# File paths
 INPUT_FILE <- file.path(PROJECT_DIR, "results/feature_matrix_causal.csv")
-RUN_LABEL <- "drop_cytotoxic"
-OUT_DIR <- file.path(PROJECT_DIR, "results", "sensitivity", RUN_LABEL)
+
+RUN_LABEL <- "reduced_no_groups_v1"
+
+OUT_DIR <- file.path(PROJECT_DIR, "results", paste0("causal_", RUN_LABEL))
 FIG_DIR <- file.path(OUT_DIR, "figures")
 
 dir.create(OUT_DIR, showWarnings = FALSE, recursive = TRUE)
@@ -58,10 +60,11 @@ set.seed(SEED)
 
 # --- Logging ------------------------------------------------------------------
 cat(strrep("=", 70), "\n")
-cat("03_causal_dag.R — Causal Graph Construction -- Sensitivity analysis\n")
+cat("05_sensitivity_analysis.R — Causal Graph Construction\n")
 cat(strrep("=", 70), "\n")
 cat("Environment:", ifelse(IS_CRC, "CRC (Slurm)", "Local"), "\n")
 cat("Input:", INPUT_FILE, "\n")
+cat("Run label:", RUN_LABEL, "\n")
 cat("Output:", OUT_DIR, "\n")
 cat("Figures:", FIG_DIR, "\n")
 cat("Cores:", N_CORES, "\n")
@@ -84,12 +87,26 @@ feature_df <- read.csv(INPUT_FILE)
 cat("Loaded:", nrow(feature_df), "samples x", ncol(feature_df), "columns\n")
 
 # Keep Groups as an upstream context node
-feature_df$Groups <- factor(
-  feature_df$Groups,
-  levels = c("Primary Tumor", "Metastatic Tumor", "Lymph Node", "Ascites", "PBMC")
+#feature_df$Groups <- factor(
+#  feature_df$Groups,
+#  levels = c("Primary Tumor", "Metastatic Tumor", "Lymph Node", "Ascites", "PBMC")
+#)
+
+# Comment out specific selected variables to see how the DAG changes, indicating upstream or downstream 
+#Hub1: Mstate_simple_TAM_immunosuppressive 
+#Hub2: Tstate_simple_cytotoxic
+#change the saved varables as well. 
+selected_vars <- c(
+  #'Groups',
+  "prop_Epithelial_cells",
+  "prop_Fibroblast",
+  "Mstate_simple_TAM_immunosuppressive",#comment out first (hub #1)
+  "Mstate_simple_dendritic_cell",
+  "Tstate_simple_regulatory",
+  "Tstate_simple_exhausted",
+  "Tstate_simple_cytotoxic", #uncomment Mstate_simple, then comment out this (hub#2),
+  "prop_NK"
 )
-
-
 
 missing_vars <- setdiff(selected_vars, names(feature_df))
 if (length(missing_vars) > 0) {
@@ -100,7 +117,11 @@ feature_df <- feature_df[, c("Samples", "Patients", selected_vars)]
 
 cat("Using revised variable set:\n")
 for (v in selected_vars) cat("  -", v, "\n")
+writeLines(selected_vars, file.path(OUT_DIR, "selected_vars.txt"))
 
+# Convert Groups to numeric codes for DAG learning, but retain labels separately
+#feature_df$Groups_num <- as.numeric(feature_df$Groups)
+#feature_df$Groups <- NULL
 
 meta_cols <- c("Samples", "Patients")
 numeric_cols <- setdiff(names(feature_df), meta_cols)
@@ -157,11 +178,13 @@ bn_data <- as.data.frame(causal_mat_scaled)
 # Biological constraints
 # ------------------------------------------------------------------------------
 
-# Groups_num is upstream context and should not have incoming edges
-blacklist <- NULL
+# ------------------------------------------------------------------------------
+# Biological constraints
+# ------------------------------------------------------------------------------
 
-# Optional biologically motivated whitelist
+blacklist <- NULL
 whitelist <- NULL
+
 
 # Helper to extract PC edges
 extract_pc_edges <- function(pc_obj, method_label) {
